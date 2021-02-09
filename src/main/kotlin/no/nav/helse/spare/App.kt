@@ -9,12 +9,25 @@ import no.nav.vault.jdbc.hikaricp.HikariCPVaultUtil
 import org.flywaydb.core.Flyway
 
 fun main() {
-    val ds = HikariCPVaultUtil.createHikariDataSourceWithVaultIntegration(hikariConfig, System.getenv("VAULT_MOUNTPATH"), System.getenv("DB_NAME") + "-user")
-    val migrationRole = System.getenv("DB_NAME") + "-admin"
-    val migrationDs = HikariCPVaultUtil.createHikariDataSourceWithVaultIntegration(hikariConfig, System.getenv("VAULT_MOUNTPATH"), migrationRole)
+    launchApp(System.getenv())
+}
+
+private fun launchApp(env: Map<String, String>) {
+    val hikariConfig = HikariConfig().apply {
+        jdbcUrl = env.getValue("JDBC_URL").removeSuffix("/") + "/" + env.getValue("DB_NAME")
+        maximumPoolSize = 3
+        minimumIdle = 1
+        idleTimeout = 10001
+        connectionTimeout = 1000
+        maxLifetime = 30001
+    }
+
+    val ds = HikariCPVaultUtil.createHikariDataSourceWithVaultIntegration(hikariConfig, env.getValue("VAULT_MOUNTPATH"), env.getValue("DB_NAME") + "-user")
+    val migrationRole = env.getValue("DB_NAME") + "-admin"
+    val migrationDs = HikariCPVaultUtil.createHikariDataSourceWithVaultIntegration(hikariConfig, env.getValue("VAULT_MOUNTPATH"), migrationRole)
 
     val repository = MeldingRepository.PostgresRepository(ds)
-    RapidApplication.create(System.getenv()).apply {
+    RapidApplication.create(env).apply {
         MeldingRiver(this, repository, UTBETALT)
         MeldingRiver(this, repository, UTBETALING_UTBETALT)
         MeldingRiver(this, repository, UTBETALING_ANNULLERT)
@@ -41,13 +54,4 @@ private class AppStatusListener(
             .migrate()
         migrationDataSource.close()
     }
-}
-
-private val hikariConfig get() = HikariConfig().apply {
-    jdbcUrl = System.getenv("JDBC_URL").removeSuffix("/") + "/" + System.getenv("DB_NAME")
-    maximumPoolSize = 3
-    minimumIdle = 1
-    idleTimeout = 10001
-    connectionTimeout = 1000
-    maxLifetime = 30001
 }
