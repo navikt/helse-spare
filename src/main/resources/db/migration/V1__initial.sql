@@ -9,6 +9,7 @@ CREATE TABLE melding
     id              UUID PRIMARY KEY,
     melding_type_id INT       NOT NULL REFERENCES melding_type (id) ON DELETE RESTRICT,
     opprettet       TIMESTAMP NOT NULL,
+    lagret          TIMESTAMP NOT NULL DEFAULT now(),
     fnr             BIGINT    NOT NULL,
     json            JSON      NOT NULL
 );
