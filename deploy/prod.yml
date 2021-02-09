@@ -43,7 +43,7 @@ spec:
   - name: KAFKA_CONSUMER_GROUP_ID
     value: spare-v1
   - name: KAFKA_RESET_POLICY
-    value: none
+    value: earliest
   - name: JDBC_URL
     value: "jdbc:postgresql://b27dbvl023.preprod.local:5432"
   - name: DATABASE_NAME
