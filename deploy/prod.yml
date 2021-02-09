@@ -45,7 +45,7 @@ spec:
   - name: KAFKA_RESET_POLICY
     value: earliest
   - name: JDBC_URL
-    value: "jdbc:postgresql://b27dbvl023.preprod.local:5432"
+    value: "jdbc:postgresql://a01dbvl027.adeo.no:5432"
   - name: DB_NAME
     value: spare
   - name: VAULT_MOUNTPATH
