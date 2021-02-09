@@ -3,7 +3,7 @@ name: bygg og deploy
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   set_version:
