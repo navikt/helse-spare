@@ -48,5 +48,5 @@ spec:
     value: "jdbc:postgresql://b27dbvl023.preprod.local:5432"
   - name: DB_NAME
     value: spare
-  - name: DATABASE_VAULT_MOUNT_PATH
+  - name: VAULT_MOUNTPATH
     value: postgresql/prod-fss/

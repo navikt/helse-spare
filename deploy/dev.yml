@@ -41,12 +41,12 @@ spec:
   - name: KAFKA_RAPID_TOPIC
     value: helse-rapid-v1
   - name: KAFKA_CONSUMER_GROUP_ID
-    value: sparre-v1
+    value: spare-v1
   - name: KAFKA_RESET_POLICY
     value: earliest
   - name: JDBC_URL
     value: "jdbc:postgresql://b27dbvl023.preprod.local:5432"
   - name: DB_NAME
     value: spare
-  - name: DATABASE_VAULT_MOUNT_PATH
+  - name: VAULT_MOUNTPATH
     value: postgresql/preprod-fss/
