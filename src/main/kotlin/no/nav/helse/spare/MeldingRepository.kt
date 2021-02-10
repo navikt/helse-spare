@@ -13,7 +13,7 @@ internal interface MeldingRepository {
 
     class PostgresRepository(private val dataSource: DataSource) : MeldingRepository {
         override fun lagre(id: UUID, type: String, fødselsnummer: Long, opprettet: LocalDateTime, json: String) {
-            val meldingtype = opprettMeldingtype(type)
+            val meldingtype = opprettMeldingtype(type) ?: hentMeldingTypeId(type) ?: throw IllegalStateException("Kunne ikke opprette meldingtype: $type")
 
             @Language("PostgreSQL")
             val statement = """
@@ -32,19 +32,31 @@ internal interface MeldingRepository {
             }
         }
 
-        private fun opprettMeldingtype(type: String): Int {
+        private fun opprettMeldingtype(type: String): Int? {
             @Language("PostgreSQL")
             val statement = """
                 INSERT INTO melding_type(navn)
                 VALUES(?)
-                ON CONFLICT (navn) DO UPDATE SET navn=EXCLUDED.navn
+                ON CONFLICT DO NOTHING
                 RETURNING id
             """
             return using(sessionOf(dataSource)) { session ->
                 session.run(queryOf(statement, type)
                     .map { it.int("id") }
                     .asSingle)
-            } ?: throw IllegalStateException("Kunne ikke opprette meldingtype: $type")
+            }
+        }
+
+        private fun hentMeldingTypeId(type: String): Int? {
+            @Language("PostgreSQL")
+            val statement = """
+                SELECT id FROM melding_type WHERE navn = ?
+            """
+            return using(sessionOf(dataSource)) { session ->
+                session.run(queryOf(statement, type)
+                    .map { it.int("id") }
+                    .asSingle)
+            }
         }
     }
 }
