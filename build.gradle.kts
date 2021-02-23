@@ -8,7 +8,7 @@ plugins {
 }
 
 dependencies {
-    implementation("com.github.navikt:rapids-and-rivers:1.6d6256d")
+    implementation("com.github.navikt:rapids-and-rivers:1.5e3ca6a")
     implementation("com.zaxxer:HikariCP:4.0.1")
     implementation("no.nav:vault-jdbc:1.3.7")
     implementation("org.flywaydb:flyway-core:7.5.0")

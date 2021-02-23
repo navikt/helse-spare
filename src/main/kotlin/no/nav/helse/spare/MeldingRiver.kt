@@ -24,12 +24,12 @@ internal class MeldingRiver(
         }.register(this)
     }
 
-    override fun onError(problems: MessageProblems, context: RapidsConnection.MessageContext) {
+    override fun onError(problems: MessageProblems, context: MessageContext) {
         log.error("Forstod ikke ${meldingtype.name.toLowerCase()} (se sikkerLog for detaljer)")
         sikkerLog.error("Forstod ikke ${meldingtype.name.toLowerCase()}: ${problems.toExtendedReport()}")
     }
 
-    override fun onPacket(packet: JsonMessage, context: RapidsConnection.MessageContext) {
+    override fun onPacket(packet: JsonMessage, context: MessageContext) {
         val id = UUID.fromString(packet["@id"].asText())
         val fnr = packet["fødselsnummer"].asLong()
         val opprettet = packet["@opprettet"].asLocalDateTime()
