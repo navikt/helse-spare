@@ -25,6 +25,8 @@ spec:
     min: 1
     max: 6
     cpuThresholdPercentage: 90
+  kafka:
+    pool: nav-prod
   prometheus:
     enabled: true
     path: /metrics
@@ -36,14 +38,10 @@ spec:
       - mountPath: /var/run/secrets/nais.io/service_user
         kvPath: /serviceuser/data/prod/srvspare
   env:
-  - name: KAFKA_PREFER_ON_PREM
-    value: "true"
-  - name: KAFKA_BOOTSTRAP_SERVERS
-    value: a01apvl00145.adeo.no:8443,a01apvl00146.adeo.no:8443,a01apvl00147.adeo.no:8443,a01apvl00148.adeo.no:8443,a01apvl00149.adeo.no:8443,a01apvl00150.adeo.no:8443
   - name: KAFKA_RAPID_TOPIC
-    value: helse-rapid-v1
+    value: htbd.rapid.v1
   - name: KAFKA_CONSUMER_GROUP_ID
-    value: spare-v1
+    value: tbd-spare-v1
   - name: KAFKA_RESET_POLICY
     value: earliest
   - name: JDBC_URL
