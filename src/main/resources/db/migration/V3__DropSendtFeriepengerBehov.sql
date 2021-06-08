@@ -1,0 +1,1 @@
+DROP TABLE sendt_feriepengerbehov
