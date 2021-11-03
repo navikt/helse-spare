@@ -1,6 +1,5 @@
 package no.nav.helse.spare
 
-import com.opentable.db.postgres.embedded.EmbeddedPostgres
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import kotliquery.queryOf
@@ -8,31 +7,26 @@ import kotliquery.sessionOf
 import kotliquery.using
 import org.flywaydb.core.Flyway
 import org.junit.jupiter.api.*
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.io.TempDir
-import java.nio.file.Path
-import java.sql.Connection
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.testcontainers.containers.PostgreSQLContainer
 import java.time.LocalDateTime
 import java.util.*
 import javax.sql.DataSource
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class PostgresRepositoryTest {
-    private lateinit var embeddedPostgres: EmbeddedPostgres
-    private lateinit var postgresConnection: Connection
+    private val postgres = PostgreSQLContainer<Nothing>("postgres:13")
     private lateinit var dataSource: DataSource
 
     private lateinit var repository: MeldingRepository
 
     @BeforeAll
-    internal fun setupAll(@TempDir postgresPath: Path) {
-        embeddedPostgres = EmbeddedPostgres.builder()
-            .setOverrideWorkingDirectory(postgresPath.toFile())
-            .setDataDirectory(postgresPath.resolve("datadir"))
-            .start()
-        postgresConnection = embeddedPostgres.postgresDatabase.connection
+    internal fun setupAll() {
+        postgres.start()
         val hikariConfig = HikariConfig().apply {
-            jdbcUrl = embeddedPostgres.getJdbcUrl("postgres", "postgres")
+            jdbcUrl = postgres.jdbcUrl
+            username = postgres.username
+            password = postgres.password
             maximumPoolSize = 3
             minimumIdle = 1
             idleTimeout = 10001
@@ -45,8 +39,7 @@ internal class PostgresRepositoryTest {
 
     @AfterAll
     internal fun teardown() {
-        postgresConnection.close()
-        embeddedPostgres.close()
+        postgres.stop()
     }
 
     @BeforeEach
