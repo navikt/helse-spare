@@ -40,7 +40,7 @@ internal class MeldingRiverTest {
 
     @Test
     fun `tolker typer`() {
-        Melding.Meldingtype.values().also { verdier ->
+        values().also { verdier ->
             verdier.forEach {
                 MeldingRiver(rapids, repository, it)
                 sendMelding(type = it)
@@ -61,7 +61,7 @@ internal class MeldingRiverTest {
         val melding = """
         {
           "@id": "$id",
-          "@event_name": "${type.name.toLowerCase()}",
+          "@event_name": "${type.name.lowercase()}",
           "@opprettet": "$opprettet",
           "fødselsnummer": "$fnr"
         }

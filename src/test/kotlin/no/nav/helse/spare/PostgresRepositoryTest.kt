@@ -8,7 +8,6 @@ import kotliquery.using
 import org.flywaydb.core.Flyway
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.io.TempDir
 import org.testcontainers.containers.PostgreSQLContainer
 import java.nio.file.Path
 import java.time.Duration
@@ -24,7 +23,7 @@ internal class PostgresRepositoryTest {
     private lateinit var repository: MeldingRepository
 
     @BeforeAll
-    internal fun setupAll(@TempDir postgresPath: Path) {
+    internal fun setupAll() {
         postgres.start()
         val hikariConfig = HikariConfig().apply {
             jdbcUrl = postgres.jdbcUrl
