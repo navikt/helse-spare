@@ -7,31 +7,33 @@ import kotliquery.sessionOf
 import kotliquery.using
 import org.flywaydb.core.Flyway
 import org.junit.jupiter.api.*
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.io.TempDir
 import org.testcontainers.containers.PostgreSQLContainer
+import java.nio.file.Path
+import java.time.Duration
 import java.time.LocalDateTime
 import java.util.*
 import javax.sql.DataSource
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class PostgresRepositoryTest {
-    private val postgres = PostgreSQLContainer<Nothing>("postgres:13")
+    private val postgres = PostgreSQLContainer<Nothing>("postgres:14")
     private lateinit var dataSource: DataSource
 
     private lateinit var repository: MeldingRepository
 
     @BeforeAll
-    internal fun setupAll() {
+    internal fun setupAll(@TempDir postgresPath: Path) {
         postgres.start()
         val hikariConfig = HikariConfig().apply {
             jdbcUrl = postgres.jdbcUrl
             username = postgres.username
             password = postgres.password
-            maximumPoolSize = 3
-            minimumIdle = 1
-            idleTimeout = 10001
-            connectionTimeout = 1000
-            maxLifetime = 30001
+            maximumPoolSize = 1
+            connectionTimeout = Duration.ofSeconds(5).toMillis()
+            maxLifetime = Duration.ofMinutes(30).toMillis()
+            initializationFailTimeout = Duration.ofMinutes(1).toMillis()
         }
         dataSource = HikariDataSource(hikariConfig)
         repository = MeldingRepository.PostgresRepository(dataSource)

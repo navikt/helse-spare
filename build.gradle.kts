@@ -1,21 +1,19 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val junitJupiterVersion = "5.7.1"
-val testcontainersVersion = "1.16.2"
+val junitJupiterVersion = "5.8.2"
+val testcontainersVersion = "1.16.3"
 val mainClass = "no.nav.helse.spare.AppKt"
 
 plugins {
-    kotlin("jvm") version "1.4.21"
+    kotlin("jvm") version "1.6.10"
 }
 
 dependencies {
-    implementation("com.github.navikt:rapids-and-rivers:1.5e3ca6a")
-    implementation("com.zaxxer:HikariCP:4.0.1")
-    implementation("no.nav:vault-jdbc:1.3.7")
-    implementation("org.flywaydb:flyway-core:7.5.0")
-    implementation("com.github.seratch:kotliquery:1.3.1")
-
-    testImplementation("com.opentable.components:otj-pg-embedded:0.13.3")
+    implementation("com.github.navikt:rapids-and-rivers:2022.03.30-21.22.dbaa41649bd3")
+    implementation("com.zaxxer:HikariCP:5.0.1")
+    implementation("no.nav:vault-jdbc:1.3.9")
+    implementation("org.flywaydb:flyway-core:8.5.5")
+    implementation("com.github.seratch:kotliquery:1.7.0")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-params:$junitJupiterVersion")
@@ -27,18 +25,18 @@ dependencies {
 }
 
 repositories {
-    jcenter()
+    mavenCentral()
     maven("https://jitpack.io")
 }
 
 tasks {
 
     named<KotlinCompile>("compileKotlin") {
-        kotlinOptions.jvmTarget = "14"
+        kotlinOptions.jvmTarget = "17"
     }
 
     named<KotlinCompile>("compileTestKotlin") {
-        kotlinOptions.jvmTarget = "14"
+        kotlinOptions.jvmTarget = "17"
     }
 
     withType<Test> {
@@ -68,6 +66,6 @@ tasks {
     }
 
     withType<Wrapper> {
-        gradleVersion = "6.8.2"
+        gradleVersion = "7.4.1"
     }
 }
