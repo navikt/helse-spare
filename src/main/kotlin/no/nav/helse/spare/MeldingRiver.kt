@@ -17,7 +17,7 @@ internal class MeldingRiver(
     init {
         River(rapidsConnection).apply {
             validate {
-                it.demandValue("@event_name", meldingtype.name.toLowerCase())
+                it.demandValue("@event_name", meldingtype.name.lowercase())
                 it.requireKey("fødselsnummer", "@id")
                 it.require("@opprettet", JsonNode::asLocalDateTime)
             }
@@ -25,8 +25,8 @@ internal class MeldingRiver(
     }
 
     override fun onError(problems: MessageProblems, context: MessageContext) {
-        log.error("Forstod ikke ${meldingtype.name.toLowerCase()} (se sikkerLog for detaljer)")
-        sikkerLog.error("Forstod ikke ${meldingtype.name.toLowerCase()}: ${problems.toExtendedReport()}")
+        log.error("Forstod ikke ${meldingtype.name.lowercase()} (se sikkerLog for detaljer)")
+        sikkerLog.error("Forstod ikke ${meldingtype.name.lowercase()}: ${problems.toExtendedReport()}")
     }
 
     override fun onPacket(packet: JsonMessage, context: MessageContext) {
