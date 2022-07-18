@@ -28,12 +28,13 @@ jobs:
           cache: 'gradle'
       - name: test and build
         run: ./gradlew test build
-      - name: build docker image
-        run: docker build . --pull -t ${{ needs.set_version.outputs.image }}
-      - name: push docker image
-        run: |
-          docker login ghcr.io --username "$GITHUB_REPOSITORY" -p ${{ secrets.GITHUB_TOKEN }} 
-          docker push ${{ needs.set_version.outputs.image }}
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          push: true
+          tags: ${{ needs.set_version.outputs.image }}
+          secrets: |
+            GIT_AUTH_TOKEN=${{ secrets.GITHUB_TOKEN }}
   snyk:
     name: check vulnerabilities
     runs-on: ubuntu-latest
