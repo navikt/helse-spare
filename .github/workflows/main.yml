@@ -34,8 +34,6 @@ jobs:
           context: .
           push: true
           tags: ${{ needs.set_version.outputs.image }}
-          secrets: |
-            GIT_AUTH_TOKEN=${{ secrets.GITHUB_TOKEN }}
   snyk:
     name: check vulnerabilities
     runs-on: ubuntu-latest
