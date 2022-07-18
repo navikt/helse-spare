@@ -38,6 +38,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
+          pull: true
           push: true
           tags: ${{ needs.set_version.outputs.image }}
   snyk:
