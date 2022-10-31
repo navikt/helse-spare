@@ -4,9 +4,9 @@ val jvmTarget = "17"
 
 val junitJupiterVersion = "5.8.2"
 val testcontainersVersion = "1.17.1"
-val rapidsAndRiversVersion = "2022.04.21-09.34.08966130226f"
+val rapidsAndRiversVersion = "2022100711511665136276.49acbaae4ed4"
 val hikariCPVersion = "5.0.1"
-val vaultJdbcVersion = "1.3.9"
+val vaultJdbcVersion = "1.3.10"
 val flywayCoreVersion = "8.5.5"
 val kotliqueryVersion = "1.7.0"
 
