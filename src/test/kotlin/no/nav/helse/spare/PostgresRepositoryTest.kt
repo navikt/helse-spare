@@ -29,9 +29,8 @@ internal class PostgresRepositoryTest {
             jdbcUrl = postgres.jdbcUrl
             username = postgres.username
             password = postgres.password
-            maximumPoolSize = 1
-            connectionTimeout = Duration.ofSeconds(5).toMillis()
-            maxLifetime = Duration.ofMinutes(30).toMillis()
+            maximumPoolSize = 2
+            connectionTimeout = Duration.ofSeconds(30).toMillis()
             initializationFailTimeout = Duration.ofMinutes(1).toMillis()
         }
         dataSource = HikariDataSource(hikariConfig)
@@ -48,6 +47,7 @@ internal class PostgresRepositoryTest {
         Flyway
             .configure()
             .dataSource(dataSource)
+            .cleanDisabled(false)
             .load()
             .also {
                 it.clean()
