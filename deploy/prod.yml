@@ -38,6 +38,7 @@ spec:
         diskAutoresize: true
         pointInTimeRecovery: true
         name: spare
+        tier: db-custom-16-106496
         databases:
           - name: spare
             envVarPrefix: DATABASE
