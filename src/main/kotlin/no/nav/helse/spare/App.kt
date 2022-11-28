@@ -5,7 +5,7 @@ import com.zaxxer.hikari.HikariDataSource
 import java.time.Duration
 import no.nav.helse.rapids_rivers.RapidApplication
 import no.nav.helse.rapids_rivers.RapidsConnection
-import no.nav.helse.spare.Melding.Meldingtype.*
+import no.nav.helse.spare.Meldingtype.*
 import org.flywaydb.core.Flyway
 
 fun main() {

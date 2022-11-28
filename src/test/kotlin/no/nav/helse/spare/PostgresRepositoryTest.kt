@@ -9,7 +9,6 @@ import org.flywaydb.core.Flyway
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
 import org.testcontainers.containers.PostgreSQLContainer
-import java.nio.file.Path
 import java.time.Duration
 import java.time.LocalDateTime
 import java.util.*
@@ -59,9 +58,10 @@ internal class PostgresRepositoryTest {
     fun `oppretter meldingstype`() {
         val id = UUID.randomUUID()
         val fnr = 123456789L
+        val aktørId = 42L
         val type = "EN_TYPE"
         val opprettet = LocalDateTime.now()
-        repository.lagre(id, type, fnr, opprettet, "{}")
+        repository.lagre(id, type, fnr, aktørId, opprettet, json())
 
         assertEquals(1, antallMeldingtyper())
         assertEquals(1, antallMeldinger())
@@ -70,9 +70,10 @@ internal class PostgresRepositoryTest {
     @Test
     fun `oppretter meldinger`() {
         val fnr = 123456789L
+        val aktørId = 42L
         val opprettet = LocalDateTime.now()
-        repository.lagre(UUID.randomUUID(), "TYPE_1", fnr, opprettet, "{}")
-        repository.lagre(UUID.randomUUID(), "TYPE_2", fnr, opprettet, "{}")
+        repository.lagre(UUID.randomUUID(), "TYPE_1", fnr, aktørId, opprettet, json())
+        repository.lagre(UUID.randomUUID(), "TYPE_2", fnr, aktørId, opprettet, json())
 
         assertEquals(2, antallMeldingtyper())
         assertEquals(2, antallMeldinger())
@@ -82,10 +83,11 @@ internal class PostgresRepositoryTest {
     fun `oppretter ikke duplikate meldinger`() {
         val id = UUID.randomUUID()
         val fnr = 123456789L
+        val aktørId = 42L
         val type = "EN_TYPE"
         val opprettet = LocalDateTime.now()
-        repository.lagre(id, type, fnr, opprettet, "{}")
-        repository.lagre(id, type, fnr, opprettet, "{}")
+        repository.lagre(id, type, fnr, aktørId, opprettet, json())
+        repository.lagre(id, type, fnr, aktørId, opprettet, json())
 
         assertEquals(1, antallMeldingtyper())
         assertEquals(1, antallMeldinger())
@@ -95,9 +97,10 @@ internal class PostgresRepositoryTest {
     fun `oppretter ikke duplikate meldinger med ulik type`() {
         val id = UUID.randomUUID()
         val fnr = 123456789L
+        val aktørId = 42L
         val opprettet = LocalDateTime.now()
-        repository.lagre(id, "TYPE_1", fnr, opprettet, "{}")
-        repository.lagre(id, "TYPE_2", fnr, opprettet, "{}")
+        repository.lagre(id, "TYPE_1", fnr, aktørId, opprettet, json())
+        repository.lagre(id, "TYPE_2", fnr, aktørId, opprettet, json())
 
         assertEquals(2, antallMeldingtyper())
         assertEquals(1, antallMeldinger())
@@ -106,14 +109,19 @@ internal class PostgresRepositoryTest {
     @Test
     fun `oppretter ikke duplikate meldingstype`() {
         val fnr = 123456789L
+        val aktørId = 42L
         val type = "EN_TYPE"
         val opprettet = LocalDateTime.now()
-        repository.lagre(UUID.randomUUID(), type, fnr, opprettet, "{}")
-        repository.lagre(UUID.randomUUID(), type, fnr, opprettet, "{}")
+        repository.lagre(UUID.randomUUID(), type, fnr, aktørId, opprettet, json())
+        repository.lagre(UUID.randomUUID(), type, fnr, aktørId, opprettet, json())
 
         assertEquals(1, antallMeldingtyper())
         assertEquals(2, antallMeldinger())
     }
+
+    private fun json() = """
+        {"aktørId":"42"}
+    """.trimIndent()
 
     private fun antallMeldinger() =
         using(sessionOf(dataSource)) { it.run(queryOf("SELECT COUNT(1) FROM melding").map { it.int(1) }.asSingle) }

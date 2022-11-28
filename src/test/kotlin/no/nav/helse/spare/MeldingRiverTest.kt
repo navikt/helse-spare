@@ -1,8 +1,7 @@
 package no.nav.helse.spare
 
-import no.nav.helse.rapids_rivers.RapidsConnection
 import no.nav.helse.rapids_rivers.testsupport.TestRapid
-import no.nav.helse.spare.Melding.Meldingtype.*
+import no.nav.helse.spare.Meldingtype.*
 import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
@@ -30,7 +29,7 @@ internal class MeldingRiverTest {
         val opprettet = LocalDateTime.now()
 
         MeldingRiver(rapids, repository, type)
-        sendMelding(id, type, "$fnr", opprettet)
+        sendMelding(id, type, "$fnr", opprettet = opprettet)
 
         assertEquals(1, repository.antall())
         assertEquals(id, repository.id(0))
@@ -56,14 +55,15 @@ internal class MeldingRiverTest {
         assertEquals(0, repository.antall())
     }
 
-    private fun sendMelding(id: UUID = UUID.randomUUID(), type: Melding.Meldingtype, fnr: String = "${Random.nextLong()}", opprettet: LocalDateTime = LocalDateTime.now()) {
+    private fun sendMelding(id: UUID = UUID.randomUUID(), type: Meldingtype, fnr: String = "${Random.nextLong()}", aktørId: Long = 42L, opprettet: LocalDateTime = LocalDateTime.now()) {
         @Language("JSON")
         val melding = """
         {
           "@id": "$id",
           "@event_name": "${type.name.lowercase()}",
           "@opprettet": "$opprettet",
-          "fødselsnummer": "$fnr"
+          "fødselsnummer": "$fnr",
+          "aktørId": "$aktørId"
         }
         """
         rapids.sendTestMessage(melding)
@@ -77,11 +77,17 @@ internal class MeldingRiverTest {
 
         fun antall() = ider.size
         fun id(indeks: Int) = ider.elementAt(indeks)
-        fun type(indeks: Int) = typer.getValue(id(indeks))
         fun fødselsnummer(indeks: Int) = fnr.getValue(id(indeks))
         fun opprettet(indeks: Int) = opprettettidspunkt.getValue(id(indeks))
 
-        override fun lagre(id: UUID, type: String, fødselsnummer: Long, opprettet: LocalDateTime, json: String) {
+        override fun lagre(
+            id: UUID,
+            type: String,
+            fødselsnummer: Long,
+            aktørId: Long,
+            opprettet: LocalDateTime,
+            json: String
+        ) {
             ider.add(id)
             typer[id] = type
             fnr[id] = fødselsnummer

@@ -2,7 +2,6 @@ package no.nav.helse.spare
 
 import kotliquery.queryOf
 import kotliquery.sessionOf
-import kotliquery.using
 import org.intellij.lang.annotations.Language
 import java.time.LocalDateTime
 import java.util.*
@@ -10,17 +9,24 @@ import javax.sql.DataSource
 import kotliquery.Session
 
 internal interface MeldingRepository {
-    fun lagre(id: UUID, type: String, fødselsnummer: Long, opprettet: LocalDateTime, json: String)
+    fun lagre(id: UUID, type: String, fødselsnummer: Long, aktørId: Long, opprettet: LocalDateTime, json: String)
 
     class PostgresRepository(private val dataSource: DataSource) : MeldingRepository {
-        override fun lagre(id: UUID, type: String, fødselsnummer: Long, opprettet: LocalDateTime, json: String) {
+        override fun lagre(
+            id: UUID,
+            type: String,
+            fødselsnummer: Long,
+            aktørId: Long,
+            opprettet: LocalDateTime,
+            json: String
+        ) {
             sessionOf(dataSource).use { session ->
                 val meldingtype = session.opprettMeldingtype(type) ?: session.hentMeldingTypeId(type) ?: throw IllegalStateException("Kunne ikke opprette meldingtype: $type")
 
                 @Language("PostgreSQL")
                 val statement = """
-                     INSERT INTO melding(id, melding_type_id, opprettet, fnr, json)
-                     VALUES (:id, :melding_type_id, :opprettet, :fnr, to_json(:json))
+                     INSERT INTO melding(id, melding_type_id, opprettet, fnr, aktor_id, json)
+                     VALUES (:id, :melding_type_id, :opprettet, :fnr, :aktor_id, to_json(:json))
                      ON CONFLICT DO NOTHING
                 """
 
@@ -29,6 +35,7 @@ internal interface MeldingRepository {
                     "melding_type_id" to meldingtype,
                     "opprettet" to opprettet,
                     "fnr" to fødselsnummer,
+                    "aktor_id" to aktørId,
                     "json" to json
                 )).asExecute)
             }
@@ -56,23 +63,5 @@ internal interface MeldingRepository {
                 .map { it.int("id") }
                 .asSingle)
         }
-    }
-}
-
-internal class Melding(
-    private val id: UUID,
-    private val type: Meldingtype,
-    private val fødselsnummer: Long,
-    private val opprettet: LocalDateTime,
-    private val json: String
-) {
-    fun lagre(repository: MeldingRepository) {
-        repository.lagre(id, type.name, fødselsnummer, opprettet, json)
-    }
-
-    internal enum class Meldingtype {
-        UTBETALING_UTBETALT, UTBETALT,
-        UTBETALING_ANNULLERT,
-        VEDTAK_FATTET
     }
 }
