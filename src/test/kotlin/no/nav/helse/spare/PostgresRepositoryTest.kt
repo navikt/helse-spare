@@ -24,6 +24,7 @@ internal class PostgresRepositoryTest {
     @BeforeAll
     internal fun setupAll() {
         postgres.start()
+        println("Database: ${postgres.jdbcUrl}")
         val hikariConfig = HikariConfig().apply {
             jdbcUrl = postgres.jdbcUrl
             username = postgres.username
