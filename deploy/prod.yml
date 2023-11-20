@@ -16,7 +16,6 @@ spec:
     initialDelay: 5
   resources:
     limits:
-      cpu: 500m
       memory: 256Mi
     requests:
       cpu: 50m
@@ -24,7 +23,12 @@ spec:
   replicas:
     min: 1
     max: 6
-    cpuThresholdPercentage: 90
+    scalingStrategy:
+      kafka:
+        topic: tbd.rapid.v1
+        consumerGroup: tbd-spare-v1
+        threshold: 200
+
   kafka:
     pool: nav-prod
   prometheus:
@@ -37,7 +41,7 @@ spec:
       - type: POSTGRES_14
         diskAutoresize: true
         pointInTimeRecovery: true
-        name: spare
+        name: spare2
         tier: db-custom-1-3840
         databases:
           - name: spare
