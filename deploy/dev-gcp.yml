@@ -19,18 +19,13 @@ spec:
       memory: 256Mi
     requests:
       cpu: 50m
-      memory: 128Mi
+      memory: 64Mi
   replicas:
     min: 1
-    max: 6
-    scalingStrategy:
-      kafka:
-        topic: tbd.rapid.v1
-        consumerGroup: tbd-spare-v1
-        threshold: 200
-
+    max: 1
+    cpuThresholdPercentage: 90
   kafka:
-    pool: nav-prod
+    pool: nav-dev
   prometheus:
     enabled: true
     path: /metrics
@@ -41,8 +36,7 @@ spec:
       - type: POSTGRES_14
         diskAutoresize: true
         pointInTimeRecovery: true
-        name: spare2
-        tier: db-custom-1-3840
+        name: spare
         databases:
           - name: spare
             envVarPrefix: DATABASE
