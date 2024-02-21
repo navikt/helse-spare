@@ -4,7 +4,7 @@ val junitJupiterVersion = "5.10.2"
 val testcontainersVersion = "1.19.0"
 val rapidsAndRiversVersion = "2024020507581707116327.1c34df474331"
 val hikariCPVersion = "5.0.1"
-val postgresqlVersion = "42.6.0"
+val postgresqlVersion = "42.7.2"
 val flywayCoreVersion = "9.7.0"
 val kotliqueryVersion = "1.9.0"
 
