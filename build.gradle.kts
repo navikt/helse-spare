@@ -2,7 +2,8 @@ val jvmTarget = 21
 
 val junitJupiterVersion = "5.10.2"
 val testcontainersVersion = "1.19.5"
-val rapidsAndRiversVersion = "2024020507581707116327.1c34df474331"
+val rapidsAndRiversVersion = "2024110520091730833744.40f3b6aa7090"
+val tbdLibsVersion = "2024.11.06-12.37-f870e704"
 val hikariCPVersion = "5.0.1"
 val postgresqlVersion = "42.7.2"
 val flywayCoreVersion = "9.7.0"
@@ -11,7 +12,7 @@ val kotliqueryVersion = "1.9.0"
 val mainClass = "no.nav.helse.spare.AppKt"
 
 plugins {
-    kotlin("jvm") version "1.9.22"
+    kotlin("jvm") version "2.0.21"
 }
 
 dependencies {
@@ -24,7 +25,8 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:$junitJupiterVersion")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
-    testImplementation("org.testcontainers:postgresql:$testcontainersVersion")
+    testImplementation("com.github.navikt.tbd-libs:rapids-and-rivers-test:$tbdLibsVersion")
+    testImplementation("com.github.navikt.tbd-libs:postgres-testdatabaser:$tbdLibsVersion")
 }
 
 repositories {
@@ -77,6 +79,6 @@ tasks {
     }
 
     withType<Wrapper> {
-        gradleVersion = "8.5"
+        gradleVersion = "8.10.2"
     }
 }

@@ -1,6 +1,6 @@
 package no.nav.helse.spare
 
-import no.nav.helse.rapids_rivers.testsupport.TestRapid
+import com.github.navikt.tbd_libs.rapids_and_rivers.test_support.TestRapid
 import no.nav.helse.spare.Meldingtype.*
 import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.Assertions.*

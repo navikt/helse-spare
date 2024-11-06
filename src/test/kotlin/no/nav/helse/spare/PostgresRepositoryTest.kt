@@ -1,58 +1,32 @@
 package no.nav.helse.spare
 
-import com.zaxxer.hikari.HikariConfig
-import com.zaxxer.hikari.HikariDataSource
+import com.github.navikt.tbd_libs.test_support.CleanupStrategy
+import com.github.navikt.tbd_libs.test_support.DatabaseContainers
+import com.github.navikt.tbd_libs.test_support.TestDataSource
+import java.time.LocalDateTime
+import java.util.*
 import kotliquery.queryOf
 import kotliquery.sessionOf
 import kotliquery.using
-import org.flywaydb.core.Flyway
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
-import org.testcontainers.containers.PostgreSQLContainer
-import java.time.Duration
-import java.time.LocalDateTime
-import java.util.*
-import javax.sql.DataSource
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+val databaseContainer = DatabaseContainers.container("spare", CleanupStrategy.tables("melding_type,melding"))
+
 internal class PostgresRepositoryTest {
-    private val postgres = PostgreSQLContainer<Nothing>("postgres:14")
-    private lateinit var dataSource: DataSource
-
+    private lateinit var testDataSource: TestDataSource
+    private val dataSource get() = testDataSource.ds
     private lateinit var repository: MeldingRepository
 
-    @BeforeAll
-    internal fun setupAll() {
-        postgres.start()
-        println("Database: ${postgres.jdbcUrl}")
-        val hikariConfig = HikariConfig().apply {
-            jdbcUrl = postgres.jdbcUrl
-            username = postgres.username
-            password = postgres.password
-            maximumPoolSize = 2
-            connectionTimeout = Duration.ofSeconds(30).toMillis()
-            initializationFailTimeout = Duration.ofMinutes(1).toMillis()
-        }
-        dataSource = HikariDataSource(hikariConfig)
+    @BeforeEach
+    internal fun before() {
+        testDataSource = databaseContainer.nyTilkobling()
         repository = MeldingRepository.PostgresRepository(dataSource)
     }
 
-    @AfterAll
+    @AfterEach
     internal fun teardown() {
-        postgres.stop()
-    }
-
-    @BeforeEach
-    internal fun setupEach() {
-        Flyway
-            .configure()
-            .dataSource(dataSource)
-            .cleanDisabled(false)
-            .load()
-            .also {
-                it.clean()
-                it.migrate()
-            }
+        databaseContainer.droppTilkobling(testDataSource)
     }
 
     @Test
