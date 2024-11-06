@@ -23,7 +23,7 @@ internal class MeldingRiver(
         River(rapidsConnection).apply {
             validate {
                 it.demandValue("@event_name", meldingtype.name.lowercase())
-                it.requireKey("fødselsnummer", "@id", "aktørId")
+                it.requireKey("fødselsnummer", "@id")
                 it.require("@opprettet", JsonNode::asLocalDateTime)
             }
         }.register(this)
@@ -37,9 +37,8 @@ internal class MeldingRiver(
     override fun onPacket(packet: JsonMessage, context: MessageContext) {
         val id = UUID.fromString(packet["@id"].asText())
         val fnr = packet["fødselsnummer"].asLong()
-        val aktørId = packet["aktørId"].asLong()
         val opprettet = packet["@opprettet"].asLocalDateTime()
         val json = packet.toJson()
-        repository.lagre(id, meldingtype.name, fnr, aktørId, opprettet, json)
+        repository.lagre(id, meldingtype.name, fnr, opprettet, json)
     }
 }

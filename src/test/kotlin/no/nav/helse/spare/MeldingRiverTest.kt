@@ -55,15 +55,15 @@ internal class MeldingRiverTest {
         assertEquals(0, repository.antall())
     }
 
-    private fun sendMelding(id: UUID = UUID.randomUUID(), type: Meldingtype, fnr: String = "${Random.nextLong()}", aktørId: Long = 42L, opprettet: LocalDateTime = LocalDateTime.now()) {
+    private fun sendMelding(id: UUID = UUID.randomUUID(), type: Meldingtype, fnr: String = "${Random.nextLong()}",
+                            opprettet: LocalDateTime = LocalDateTime.now()) {
         @Language("JSON")
         val melding = """
         {
           "@id": "$id",
           "@event_name": "${type.name.lowercase()}",
           "@opprettet": "$opprettet",
-          "fødselsnummer": "$fnr",
-          "aktørId": "$aktørId"
+          "fødselsnummer": "$fnr"
         }
         """
         rapids.sendTestMessage(melding)
@@ -84,7 +84,6 @@ internal class MeldingRiverTest {
             id: UUID,
             type: String,
             fødselsnummer: Long,
-            aktørId: Long,
             opprettet: LocalDateTime,
             json: String
         ) {

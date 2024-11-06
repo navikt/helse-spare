@@ -1,22 +1,21 @@
 package no.nav.helse.spare
 
-import kotliquery.queryOf
-import kotliquery.sessionOf
-import org.intellij.lang.annotations.Language
 import java.time.LocalDateTime
 import java.util.*
 import javax.sql.DataSource
 import kotliquery.Session
+import kotliquery.queryOf
+import kotliquery.sessionOf
+import org.intellij.lang.annotations.Language
 
 internal interface MeldingRepository {
-    fun lagre(id: UUID, type: String, fødselsnummer: Long, aktørId: Long, opprettet: LocalDateTime, json: String)
+    fun lagre(id: UUID, type: String, fødselsnummer: Long, opprettet: LocalDateTime, json: String)
 
     class PostgresRepository(private val dataSource: DataSource) : MeldingRepository {
         override fun lagre(
             id: UUID,
             type: String,
             fødselsnummer: Long,
-            aktørId: Long,
             opprettet: LocalDateTime,
             json: String
         ) {
@@ -25,8 +24,8 @@ internal interface MeldingRepository {
 
                 @Language("PostgreSQL")
                 val statement = """
-                     INSERT INTO melding(id, melding_type_id, opprettet, fnr, aktor_id, json)
-                     VALUES (:id, :melding_type_id, :opprettet, :fnr, :aktor_id, to_json(:json))
+                     INSERT INTO melding(id, melding_type_id, opprettet, fnr, json)
+                     VALUES (:id, :melding_type_id, :opprettet, :fnr, to_json(:json))
                      ON CONFLICT DO NOTHING
                 """
 
@@ -35,7 +34,6 @@ internal interface MeldingRepository {
                     "melding_type_id" to meldingtype,
                     "opprettet" to opprettet,
                     "fnr" to fødselsnummer,
-                    "aktor_id" to aktørId,
                     "json" to json
                 )).asExecute)
             }
