@@ -8,9 +8,6 @@ Finn nyeste versjon av gradle her: https://gradle.org/releases/
 
 ```./gradlew wrapper --gradle-version $gradleVersjon```
 
-Husk å oppdater gradle versjon i build.gradle.kts filen
-```gradleVersion = "$gradleVersjon"```
-
 # Henvendelser
 Spørsmål knyttet til koden eller prosjektet kan stilles som issues her på GitHub.
 
