@@ -1,5 +1,3 @@
-val jvmTarget = 21
-
 val junitJupiterVersion = "5.10.2"
 val testcontainersVersion = "1.19.5"
 val rapidsAndRiversVersion = "2024110520091730833744.40f3b6aa7090"
@@ -46,9 +44,9 @@ repositories {
     maven("https://github-package-registry-mirror.gc.nav.no/cached/maven-release")
 }
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(jvmTarget)
+kotlin {
+    jvmToolchain {
+        languageVersion.set(JavaLanguageVersion.of("21"))
     }
 }
 
