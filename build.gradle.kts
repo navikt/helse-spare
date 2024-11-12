@@ -1,4 +1,4 @@
-val junitJupiterVersion = "5.10.2"
+val junitJupiterVersion = "5.11.3"
 val testcontainersVersion = "1.19.5"
 val rapidsAndRiversVersion = "2024110520091730833744.40f3b6aa7090"
 val tbdLibsVersion = "2024.11.06-12.37-f870e704"
