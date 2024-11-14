@@ -23,8 +23,8 @@ internal class MeldingRiver(
     }
     init {
         River(rapidsConnection).apply {
+            precondition { it.requireValue("@event_name", meldingtype.name.lowercase()) }
             validate {
-                it.demandValue("@event_name", meldingtype.name.lowercase())
                 it.requireKey("fødselsnummer", "@id")
                 it.require("@opprettet", JsonNode::asLocalDateTime)
             }
