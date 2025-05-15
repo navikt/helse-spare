@@ -49,8 +49,6 @@ spec:
         databases:
           - name: spare
             envVarPrefix: DATABASE
-            users:
-              - name: helse-sparker-feriepenger
   env:
   - name: KAFKA_RAPID_TOPIC
     value: tbd.rapid.v1
