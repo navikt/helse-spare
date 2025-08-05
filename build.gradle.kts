@@ -9,7 +9,7 @@ val kotliqueryVersion = "1.9.0"
 val mainClass = "no.nav.helse.spare.AppKt"
 
 plugins {
-    kotlin("jvm") version "2.1.20"
+    kotlin("jvm") version "2.2.0"
 }
 
 dependencies {
