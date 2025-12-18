@@ -54,7 +54,7 @@ spec:
           - name: spare
             envVarPrefix: DATABASE
             users:
-              - bigquery-connection-user
+              - name: bigquery-connection-user
   env:
     - name: KAFKA_RAPID_TOPIC
       value: tbd.rapid.v1
