@@ -1,77 +1,18 @@
-val junitJupiterVersion = "5.12.1"
-val rapidsAndRiversVersion = "2026011411051768385145.e8ebad1177b4"
-val tbdLibsVersion = "2026.01.22-09.16-1d3f6039"
-val hikariCPVersion = "6.3.0"
-val postgresqlVersion = "42.7.7"
-val flywayVersion = "11.5.0"
-val kotliqueryVersion = "1.9.0"
-
-val mainClass = "no.nav.helse.spare.AppKt"
-
 plugins {
-    kotlin("jvm") version "2.3.0"
+    alias(libs.plugins.sykepenger.deployable)
+}
+
+sykepengerDeployable {
+    mainClass = "no.nav.helse.spare.AppKt"
 }
 
 dependencies {
-    implementation("com.github.navikt:rapids-and-rivers:$rapidsAndRiversVersion")
-    implementation("com.zaxxer:HikariCP:$hikariCPVersion")
-    implementation("org.postgresql:postgresql:$postgresqlVersion")
-    implementation("org.flywaydb:flyway-database-postgresql:$flywayVersion")
-    implementation("com.github.seratch:kotliquery:$kotliqueryVersion")
+    implementation(libs.rapidsAndRivers)
+    implementation(libs.hikariCP)
+    implementation(libs.postgresql)
+    implementation(libs.flyway.databasePostgresql)
+    implementation(libs.kotliquery)
 
-    testImplementation("org.junit.jupiter:junit-jupiter:$junitJupiterVersion")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-
-    testImplementation("com.github.navikt.tbd-libs:rapids-and-rivers-test:$tbdLibsVersion")
-    testImplementation("com.github.navikt.tbd-libs:postgres-testdatabaser:$tbdLibsVersion")
-}
-
-// Sett opp repositories basert på om vi kjører i CI eller ikke
-// Jf. https://github.com/navikt/utvikling/blob/main/docs/teknisk/Konsumere%20biblioteker%20fra%20Github%20Package%20Registry.md
-repositories {
-    mavenCentral()
-    if (providers.environmentVariable("GITHUB_ACTIONS").orNull == "true") {
-        maven {
-            url = uri("https://maven.pkg.github.com/navikt/maven-release")
-            credentials {
-                username = "token"
-                password = providers.environmentVariable("GITHUB_TOKEN").orNull!!
-            }
-        }
-    } else {
-        maven("https://repo.adeo.no/repository/github-package-registry-navikt/")
-    }
-}
-
-kotlin {
-    jvmToolchain {
-        languageVersion.set(JavaLanguageVersion.of("21"))
-    }
-}
-
-tasks {
-    withType<Test> {
-        useJUnitPlatform()
-        testLogging {
-            events("passed", "skipped", "failed")
-        }
-    }
-
-    withType<Jar> {
-        archiveBaseName.set("app")
-
-        manifest {
-            attributes["Main-Class"] = mainClass
-            attributes["Class-Path"] = configurations.runtimeClasspath.get().joinToString(separator = " ") {
-                it.name
-            }
-        }
-
-        doLast {
-            configurations.runtimeClasspath.get().forEach {
-                val file = File("${layout.buildDirectory.get()}/libs/${it.name}")
-                if (!file.exists()) it.copyTo(file)
-            }
-        }
-    }
+    testImplementation(libs.tbdLibs.rapidsAndRiversTest)
+    testImplementation(libs.tbdLibs.postgresTestdatabaser)
 }

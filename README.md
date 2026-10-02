@@ -1,5 +1,5 @@
 # Spare
-![Bygg og deploy](https://github.com/navikt/helse-spare/workflows/bygg%20og%20deploy/badge.svg)
+![Bygg og deploy](https://github.com/navikt/helse-spare/actions/workflows/main.yml/badge.svg)
 
 Sparer meldinger på rapiden og lagrer dem i databasen.
 

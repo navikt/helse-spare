@@ -6,7 +6,6 @@ metadata:
   labels:
     team: tbd
 spec:
-  image: {{image}}
   port: 8080
   liveness:
     path: isalive
@@ -15,17 +14,10 @@ spec:
     path: isready
     initialDelay: 5
   resources:
-    limits:
-      memory: 256Mi
     requests:
       cpu: 50m
-      memory: 196Mi
   replicas:
     min: 1
-    max: 1
-    cpuThresholdPercentage: 90
-  kafka:
-    pool: nav-dev
   prometheus:
     enabled: true
     path: /metrics
@@ -34,16 +26,6 @@ spec:
       rules:
         - application: logging
           namespace: nais-system
-  gcp:
-    sqlInstances:
-      - type: POSTGRES_17
-        tier: db-f1-micro
-        diskAutoresize: true
-        pointInTimeRecovery: true
-        name: spare
-        databases:
-          - name: spare
-            envVarPrefix: DATABASE
   env:
     - name: KAFKA_RAPID_TOPIC
       value: tbd.rapid.v1
