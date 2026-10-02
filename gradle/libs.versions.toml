@@ -7,7 +7,7 @@ sykepengerGradlePlugins = "20261001.1830"
 flyway-databasePostgresql = { module = "org.flywaydb:flyway-database-postgresql", version.ref = "flyway" }
 hikariCP = "com.zaxxer:HikariCP:6.3.0"
 kotliquery = "com.github.seratch:kotliquery:1.9.1"
-postgresql = "org.postgresql:postgresql:42.7.7"
+postgresql = "org.postgresql:postgresql:42.7.12"
 
 rapidsAndRivers = "com.github.navikt:rapids-and-rivers:2026011411051768385145.e8ebad1177b4"
 
