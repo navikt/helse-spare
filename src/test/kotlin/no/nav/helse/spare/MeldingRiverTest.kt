@@ -11,7 +11,6 @@ import java.util.*
 import kotlin.random.Random
 
 internal class MeldingRiverTest {
-
     private lateinit var repository: TestRepository
     private lateinit var rapids: TestRapid
 
@@ -55,8 +54,12 @@ internal class MeldingRiverTest {
         assertEquals(0, repository.antall())
     }
 
-    private fun sendMelding(id: UUID = UUID.randomUUID(), type: Meldingtype, fnr: String = "${Random.nextLong()}",
-                            opprettet: LocalDateTime = LocalDateTime.now()) {
+    private fun sendMelding(
+        id: UUID = UUID.randomUUID(),
+        type: Meldingtype,
+        fnr: String = "${Random.nextLong()}",
+        opprettet: LocalDateTime = LocalDateTime.now(),
+    ) {
         @Language("JSON")
         val melding = """
         {
@@ -76,8 +79,11 @@ internal class MeldingRiverTest {
         private val opprettettidspunkt = mutableMapOf<UUID, LocalDateTime>()
 
         fun antall() = ider.size
+
         fun id(indeks: Int) = ider.elementAt(indeks)
+
         fun fødselsnummer(indeks: Int) = fnr.getValue(id(indeks))
+
         fun opprettet(indeks: Int) = opprettettidspunkt.getValue(id(indeks))
 
         override fun lagre(
@@ -85,7 +91,7 @@ internal class MeldingRiverTest {
             type: String,
             fødselsnummer: Long,
             opprettet: LocalDateTime,
-            json: String
+            json: String,
         ) {
             ider.add(id)
             typer[id] = type
