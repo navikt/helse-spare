@@ -3,13 +3,13 @@ package no.nav.helse.spare
 import com.github.navikt.tbd_libs.test_support.CleanupStrategy
 import com.github.navikt.tbd_libs.test_support.DatabaseContainers
 import com.github.navikt.tbd_libs.test_support.TestDataSource
-import java.time.LocalDateTime
-import java.util.*
 import kotliquery.queryOf
 import kotliquery.sessionOf
 import kotliquery.using
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
+import java.time.LocalDateTime
+import java.util.*
 
 val databaseContainer = DatabaseContainers.container("spare", CleanupStrategy.tables("melding_type,melding"))
 
@@ -89,13 +89,12 @@ internal class PostgresRepositoryTest {
         assertEquals(2, antallMeldinger())
     }
 
-    private fun json() = """
+    private fun json() =
+        """
         {"aktørId":"42"}
-    """.trimIndent()
+        """.trimIndent()
 
-    private fun antallMeldinger() =
-        using(sessionOf(dataSource)) { it.run(queryOf("SELECT COUNT(1) FROM melding").map { it.int(1) }.asSingle) }
+    private fun antallMeldinger() = using(sessionOf(dataSource)) { it.run(queryOf("SELECT COUNT(1) FROM melding").map { it.int(1) }.asSingle) }
 
-    private fun antallMeldingtyper() =
-        using(sessionOf(dataSource)) { it.run(queryOf("SELECT COUNT(1) FROM melding_type").map { it.int(1) }.asSingle) }
+    private fun antallMeldingtyper() = using(sessionOf(dataSource)) { it.run(queryOf("SELECT COUNT(1) FROM melding_type").map { it.int(1) }.asSingle) }
 }
